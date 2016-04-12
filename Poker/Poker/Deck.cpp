@@ -121,10 +121,17 @@ void Deck::shuffle(Deck &d)
 
 void Deck::sort(Deck &d)
 {
-	Card *cur = top;
-	//Deck to put sorted 
-	Deck sorted;
-	drawCard(sorted); //drawCard off Deck and addCard to sorted
+	Card *prev = top;
+	Card *iter = top->next;
+	
+	if ((iter->getVALUE()) <= (top->getVALUE()))
+	{
+		prev->next = iter->next;
+		iter->next = top->next;
+		top = iter;
+		iter = prev->next;
+	}
+	
 
 
 }

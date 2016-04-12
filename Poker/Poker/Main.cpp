@@ -4,7 +4,7 @@
 using namespace std;
 
 
-// Texas Hold'em Version 0.5  April 5th 2016
+// Texas Hold'em Version 0.6  April 12th 2016
 //Zachary Ellis
 void main()
 {
