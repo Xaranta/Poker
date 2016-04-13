@@ -41,21 +41,21 @@ public:
 	string getRANK(int val)
 	{
 		string rank = "";
-		int r = val % 13;
+		int r = (val % 13) + 1;
 		switch (r) {
-		case 0: rank = "ACE"; break;
-		case 1: rank = "2"; break;
-		case 2: rank = "3"; break;
-		case 3: rank = "4"; break;
-		case 4: rank = "5"; break;
-		case 5: rank = "6"; break;
-		case 6: rank = "7"; break;
-		case 7: rank = "8"; break;
-		case 8: rank = "9"; break;
-		case 9: rank = "10"; break;
-		case 10: rank = "JACK"; break;
-		case 11: rank = "QUEEN"; break;
-		case 12: rank = "KING"; break;
+		case 1: rank = "ACE"; break;
+		case 2: rank = "2"; break;
+		case 3: rank = "3"; break;
+		case 4: rank = "4"; break;
+		case 5: rank = "5"; break;
+		case 6: rank = "6"; break;
+		case 7: rank = "7"; break;
+		case 8: rank = "8"; break;
+		case 9: rank = "9"; break;
+		case 10: rank = "10"; break;
+		case 11: rank = "JACK"; break;
+		case 12: rank = "QUEEN"; break;
+		case 13: rank = "KING"; break;
 		}
 		return rank;
 	}

@@ -7,7 +7,8 @@ class Game
 	friend class Card;  //allows Deck class access to Card's private member variables
 protected:
 	Deck unShuffled, shuffled, discardPile, communityCards, myHand, compHand1, compHand2, compHand3;
-	Card *drawCard;
+
+	//Card *drawCard;
 public:
 	Game();
 	int* checkHand(Deck &playerhand, Deck &communityCards);
