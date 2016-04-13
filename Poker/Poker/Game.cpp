@@ -14,88 +14,135 @@ Game::Game()
 	cout << " first cell of shuffled " << shuffled.deck[0] << endl;
 	//cout >> endl;
 	
+	//
 
-	//------------------------------------ This is essentially the code for the round function.
-	// void playRound( round #, playerArray[]) - each round a player has to put in the big blind. 
-	// maybe we can pass in the round number and decide that way. So if we are passing in the case of the first round with 4 players in the player array,
-	//it would look like this: big blind = playerArray[ (round# + playerArray.size() - 1) % playerArray.size() ].
-	//If we did this, then round 1 would put the big blind on playerArray[0].
+	cout << "beginning game loop" << endl << endl;
+	
+	int winningHands[10][4];
+	int rounds = 10;
+	for (int i = 0; i < rounds; i++)
+	{
+		cout << endl << endl;
+		cout << "Round #: " << i << endl;
+		cout << "Round #: " << i << endl;
 
-	//There are 4 rounds of betting. First after the players are dealt their cards, then the flop, then the "turn", then the river.
+		//Array to hold the winning hands
 
-	//Turn 1
-	// int pot = 0;
-	//All players put an ante into the pot. One player places big ante. Players must either call the big ante, raise past it, or fold their hand.
+		
 
-	// deal all players their cards cards. 
-	for (int i = 0; i < 2; i++) {
-		//drawCard = drawPile.drawCard();
-		shuffled.drawCard(myHand);
-		shuffled.drawCard(compHand1);
-		shuffled.drawCard(compHand2);
-		shuffled.drawCard(compHand3);
+
+		unShuffled.shuffle(shuffled);
+		//------------------------------------ This is essentially the code for the round function.
+		// void playRound( round #, playerArray[]) - each round a player has to put in the big blind. 
+		// maybe we can pass in the round number and decide that way. So if we are passing in the case of the first round with 4 players in the player array,
+		//it would look like this: big blind = playerArray[ (round# + playerArray.size() - 1) % playerArray.size() ].
+		//If we did this, then round 1 would put the big blind on playerArray[0].
+
+		//There are 4 rounds of betting. First after the players are dealt their cards, then the flop, then the "turn", then the river.
+
+		//Turn 1
+		// int pot = 0;
+		//All players put an ante into the pot. One player places big ante. Players must either call the big ante, raise past it, or fold their hand.
+
+		// deal all players their cards cards. 
+		for (int i = 0; i < 2; i++) {
+			//drawCard = drawPile.drawCard();
+			shuffled.drawCard(myHand);
+			shuffled.drawCard(compHand1);
+			shuffled.drawCard(compHand2);
+			shuffled.drawCard(compHand3);
+		}
+
+		//first betting round goes here. betRound(playerArray[]);
+
+		/*
+		cout << "My hand" << endl;
+		myHand.printCards();
+		cout << "Computer 1's hand" << endl;
+		compHand1.printCards();
+		cout << "Computer 2's hand" << endl;
+		compHand2.printCards();
+		cout << "Computer 3's hand" << endl;
+		compHand3.printCards();
+		*/
+
+		//Turn 2: the flop
+
+		shuffled.drawCard(discardPile); //first burn card
+
+		shuffled.drawCard(communityCards); // deal three cards for the flop
+		shuffled.drawCard(communityCards);
+		shuffled.drawCard(communityCards);
+
+		//cout << endl << "THE FLOP" << endl;
+		//communityCards.printCards();
+
+		//Betting round goes here
+
+		//Turn 3: The "turn"
+		shuffled.drawCard(discardPile); // second burn card
+		shuffled.drawCard(communityCards); //deal turn card
+
+		//cout << endl << "THE TURN" << endl;
+		//communityCards.printCards();
+
+		//betting round here
+
+		//Turn 4: The River
+		shuffled.drawCard(discardPile); // third burn card
+		shuffled.drawCard(communityCards); //deal river card
+
+		//cout << endl << "THE RIVER" << endl;
+		//communityCards.printCards();
+
+		//final round of betting.
+		//compare the handStrengths of all remaining players. 
+
+		//shuffled.print(); Just wanted to make sure cards were being removed
+
+		int* playerHandStr = checkHand(myHand, communityCards);
+		int* comp1HandStr = checkHand(compHand1, communityCards);
+		int* comp2HandStr = checkHand(compHand2, communityCards);
+		int* comp3HandStr = checkHand(compHand3, communityCards);
+
+		int* winningHand = playerHandStr;
+		if (comp1HandStr[0] > winningHand[0]) { winningHand = comp1HandStr; }
+		if (comp2HandStr[0] > winningHand[0]) { winningHand = comp2HandStr; }
+		if (comp3HandStr[0] > winningHand[0]) { winningHand = comp3HandStr; }
+
+
+		/*cout << endl << "player hand strength" << endl;
+		printHandStrength(playerHandStr);
+
+
+
+		cout << "Computer 1 hand strength" << endl;
+		printHandStrength(comp1HandStr);
+
+		cout << "Computer 2 hand strength" << endl;
+		printHandStrength(comp2HandStr);
+
+		cout << "Computer 3 hand strength" << endl;
+		printHandStrength(comp3HandStr);
+		*/
+		for (int j = 0; j<4; j++)
+		{
+			winningHands[i][j] = winningHand[j];
+		}
+
+		//compare all the remaining handStrengths. Just cycle through the indexes of the handStrength arrays and, the loop will run until one of the players has the
+		//highest value. For instance, if 2 players both have a pair of jacks, having 1 jack in their hand, and the other as a community card, you would then
+		//compare high cards. If the highest card in both of their hands was that jack, then the loop would check who has the highest kicker card. If the players 
+		// match all the way through the array, the pot is split between those players. 
+	}
+	cout << "The winning hands of the games " << endl;
+	
+	for (int k = 0; k < rounds; k++)
+	{
+		printHandStrength(winningHands[k]);
 	}
 
-	//first betting round goes here. betRound(playerArray[]);
-
-	cout << "My hand" << endl;
-	myHand.printCards();
-	cout << "Computer 1's hand" << endl;
-	compHand1.printCards();
-	cout << "Computer 2's hand" << endl;
-	compHand2.printCards();
-	cout << "Computer 3's hand" << endl;
-	compHand3.printCards();
-	
-	//Turn 2: the flop
-
-	shuffled.drawCard(discardPile); //first burn card
-
-	shuffled.drawCard(communityCards); // deal three cards for the flop
-	shuffled.drawCard(communityCards);
-	shuffled.drawCard(communityCards);
-	cout << endl << "THE FLOP" << endl;
-	communityCards.printCards();
-	//Betting round goes here
-
-	//Turn 3: The "turn"
-	shuffled.drawCard(discardPile); // second burn card
-	shuffled.drawCard(communityCards); //deal turn card
-	cout << endl << "THE TURN" << endl;
-	communityCards.printCards();
-
-	//Turn 4: The River
-	shuffled.drawCard(discardPile); // third burn card
-	shuffled.drawCard(communityCards); //deal river card
-	cout << endl << "THE RIVER" << endl;
-	communityCards.printCards();
-	//final round of betting.
-	//compare the handStrengths of all remaining players. 
-
-	//shuffled.print(); Just wanted to make sure cards were being removed
-
-	int* playerHandStr = checkHand(myHand, communityCards);
-	int* comp1HandStr = checkHand(compHand1, communityCards);
-	int* comp2HandStr = checkHand(compHand2, communityCards);
-	int* comp3HandStr = checkHand(compHand3, communityCards);
-
-	cout << endl << "player hand strength" << endl;
-	printHandStrength(playerHandStr);
-
-	cout << "Computer 1 hand strength" << endl;
-	printHandStrength(comp1HandStr);
-
-	cout << "Computer 2 hand strength" << endl;
-	printHandStrength(comp2HandStr);
-
-	cout << "Computer 3 hand strength" << endl;
-	printHandStrength(comp3HandStr);
-
-	//compare all the remaining handStrengths. Just cycle through the indexes of the handStrength arrays and, the loop will run until one of the players has the
-	//highest value. For instance, if 2 players both have a pair of jacks, having 1 jack in their hand, and the other as a community card, you would then
-	//compare high cards. If the highest card in both of their hands was that jack, then the loop would check who has the highest kicker card. If the players 
-	// match all the way through the array, the pot is split between those players. 
-
+	return;
 }
 
 
@@ -138,29 +185,30 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 	result[5] = communityCards.deck[3];
 	result[6] = communityCards.deck[4];
 
-	cout << "printing 7 cards" << endl; //alright we got all 7 cards in an array
+	
+	cout << "printing out the full hand" << endl; //alright we got all 7 cards in an array
 	for (int i = 0; i < 7; i++)
 	{
-		cout << result[i] << "   ";
+		cout << result[i]%13 << "   ";
 	}
+
 	cout << endl;
+	
 
 
-	//I think I should create two loops, one to check for the number of a kind cards, the other checking for suits. 
-	//lets check for of a kind cards. Although pairs in community cards don't
 	int ofAKind1 = 0, ofAKind2 = 0;
 	bool pocketPair = false; // is this needed? for any reason.
 	int highCard = 0;
 	int kicker = 0;
 
-	if (result[0] == result[1])  //pocket pair
+	if (result[0]%13 == result[1]%13)  //pocket pair
 	{
 		pocketPair = true;
 		ofAKind1++;
 		highCard = result[0];
-		for (int i = 0; i < 5; i++)
+		for (int i = 2; i < 5; i++)
 		{
-			if (result[0] == result[i + 2])
+			if (result[0]%13 == result[i]%13)
 			{
 				ofAKind1++;
 			}
@@ -170,75 +218,77 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 	{
 		for (int i = 0; i < 5; i++)
 		{
-			if (result[0] == result[i + 2])
+			if (result[0]%13 == result[i + 2]%13)
 			{
 				ofAKind1++;
 			}
 		}
 		for (int j = 0; j < 5; j++)
 		{
-			if (result[1] == result[j + 2])
+			if (result[1]%13 == result[j + 2]%13)
 			{
 				ofAKind2++;
 			}
 		}
 	}
+	cout << "                                        of a kind1 = " << ofAKind1 << "  and of a kind2 = " << ofAKind2 << endl;
 
-	if (ofAKind1 == 0 && ofAKind2 == 0)
+	if (ofAKind1 == 0 && ofAKind2 == 0) //Nothing in the hand, just need to set highcard and kicker
 	{
-		if (result[0] > result[1])
+		if (result[0]%13 > result[1]%13)
 		{
-			highCard = result[0];
-			kicker = result[1];
+			highCard = result[0]%13;
+			kicker = result[1]%13;
 		}
 		else
 		{
-			highCard = result[1];
-			kicker = result[0];
+			highCard = result[1]%13;
+			kicker = result[0]%13;
 		}
 	}
 
-	if (ofAKind1 != 0 && ofAKind2 != 0) //Nothing in the hand, just need to set highcard and kicker
+	if (ofAKind1 != 0 && ofAKind2 != 0) //at least a 2 pair, can lead to full house. 
 	{
 		if (ofAKind1 == ofAKind2)
 		{
-			if (result[0] > result[1])
+			if (result[0]%13 > result[1]%13)
 			{
-				highCard = result[0];
-				kicker = result[1];
+				highCard = result[0]%13;
+				kicker = result[1]%13;
 			}
 			else
 			{
-				highCard = result[1];
-				kicker = result[0];
+				highCard = result[1]%13;
+				kicker = result[0]%13;
 			}
 		}
 
 		if (ofAKind1 > ofAKind2)
 		{
-			highCard = result[0];
-			kicker = result[1];
+			highCard = result[0]%13;
+			kicker = result[1]%13;
 		}
 
 		if (ofAKind1 < ofAKind2)
 		{
-			highCard = result[1];
-			kicker = result[0];
+			highCard = result[1]%13;
+			kicker = result[0]%13;
 		}
 	}
 
 	if (ofAKind1 != 0 && ofAKind2 == 0) //single pair, first card of a kind.
 	{
-		highCard = result[0];
-		kicker = result[1];
+		highCard = result[0]%13;
+		kicker = result[1]%13;
 	}
 
 	if (ofAKind1 == 0 && ofAKind2 != 0) //single pair, second card of a kind. 
 	{
-		highCard = result[1];
-		kicker = result[0];
+		highCard = result[1]%13;
+		kicker = result[0]%13;
 	}
 
+	/* pretty sure I wrote this up earlier
 	if ((ofAKind1 != 0 && ofAKind2 != 0) && (ofAKind1 > ofAKind2)) //basically in the case of a 2 pair, full house, or in the weird ass case that you have a four of a kind and a kicker pair
 	{
 		highCard = result[0];
@@ -250,17 +300,7 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 		highCard = result[1];
 		kicker = result[0];
 	}
-
-
-
-
-	/*if ((ofAKind1 != 0 && ofAKind2 == 0) || (ofAKind1 == 0 && ofAKind2 != 0)) // either pocket pair or only first card has an of a kind.
-	// OR first card doesn't have an of a kind
-	{
-	switch (ofAKind1) {
-	case 1: handStrength[0] = 1; handStrength[1]; //1 Pair
-	case 2: std::cout << "2";   //execution starts at this case label
-	}*/
+	*/
 
 	switch (ofAKind1) {
 	case 0: //card one is nothing.
@@ -296,7 +336,7 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 			handStrength[2] = kicker;
 			break;
 		case 2:
-			handStrength[0] = 4;
+			handStrength[0] = 7;
 			handStrength[1] = highCard;
 			handStrength[2] = kicker;
 			break;
@@ -361,10 +401,12 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 	// I will get to tint sameSuit = 0; 
 
 
+	/*
 	cout << "printing ofaKind1 " << ofAKind1 << " and ofaKind2 " << ofAKind2 << endl;
 	cout << "printing highcard " << highCard << " and kicker " << kicker << endl;
-	cout << "printing handStrength array" << endl;
-	for (int i = 0; i < 5; i++)
+	
+	cout << "printing handStrength array" << endl << endl;
+	for (int i = 0; i < 4; i++)
 	{
 		if (handStrength[i] > 0)
 		{
@@ -373,15 +415,17 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 
 	}
 	cout << endl;
+	*/
+
 	return handStrength;
 }
 
 
 void Game::printHandStrength(int * handStrength) //for testing purposes to print out hand strenght
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		if (handStrength[i] > 0)
+		if (handStrength[i] > -1)
 		{
 			cout << handStrength[i] << "---";
 		}
