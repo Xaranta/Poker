@@ -75,6 +75,21 @@ public:
 		return suit;
 	}
 
+	int getintSUIT(int val)
+	{
+		int suit = -1;
+		int s = val / 13;
+		switch (s) {
+		case 0: suit = 0; break;
+		case 1: suit = 1; break;
+		case 2: suit = 2; break;
+		case 3:
+		case 4: suit = 3; break;
+
+		} // 0 spade 1 club 2 heart 3 diamond.
+		return suit;
+	}
+
 	//int* getCardRanks();
 	//pretty sure this is unnessicary. 
 };

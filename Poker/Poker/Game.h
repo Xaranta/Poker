@@ -13,4 +13,10 @@ public:
 	Game();
 	int* checkHand(Deck &playerhand, Deck &communityCards);
 	void printHandStrength(int * handStrength);
+	int * checkOfaKinds(int * cardsInPlay);
+	int * checkForFlushes(int * cardsInPlay);
+
+	int * compareHandStr(int * handstr1, int * handstr2);
+
+	int getintSUIT(int val);
 };

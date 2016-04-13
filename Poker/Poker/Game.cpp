@@ -24,7 +24,8 @@ Game::Game()
 	{
 		cout << endl << endl;
 		cout << "Round #: " << i << endl;
-		cout << "Round #: " << i << endl;
+		cout << "------------------------------------------------------------------------------" << endl;
+		cout << "------------------------------------------------------------------------------" << endl;
 
 		//Array to hold the winning hands
 
@@ -99,16 +100,23 @@ Game::Game()
 		//compare the handStrengths of all remaining players. 
 
 		//shuffled.print(); Just wanted to make sure cards were being removed
-
+		cout << "now checking player's hand" << endl;
 		int* playerHandStr = checkHand(myHand, communityCards);
+
+		cout << "now checking Computer21's hand" << endl;
 		int* comp1HandStr = checkHand(compHand1, communityCards);
+
+		cout << "now checking Computer2's hand" << endl;
 		int* comp2HandStr = checkHand(compHand2, communityCards);
+
+		cout << "now checking Computer3's hand" << endl;
 		int* comp3HandStr = checkHand(compHand3, communityCards);
 
 		int* winningHand = playerHandStr;
-		if (comp1HandStr[0] > winningHand[0]) { winningHand = comp1HandStr; }
-		if (comp2HandStr[0] > winningHand[0]) { winningHand = comp2HandStr; }
-		if (comp3HandStr[0] > winningHand[0]) { winningHand = comp3HandStr; }
+		winningHand = compareHandStr(winningHand, comp1HandStr);
+		winningHand = compareHandStr(winningHand, comp2HandStr);
+		winningHand = compareHandStr(winningHand, comp3HandStr);
+
 
 
 		/*cout << endl << "player hand strength" << endl;
@@ -154,23 +162,23 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 
 	//I'm just going to define a discrete value system for the strength of the hands. Maybe the best thing to do is to define an array. 
 
-	int * handStrength = new int[4];// [0]= hand strength - [1] = high card - whats the third cell for...? flush suit? 2nd pair in the case of two pair and full house? kicker?
+	// [0]= hand strength - [1] = high card - whats the third cell for...? flush suit? 2nd pair in the case of two pair and full house? kicker?
 
-									//hand strength ----------------------------------------------------------------------------------
-									// nothing / high card ----- [0] = 1 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
-									// single pair ------------- [0] = 2 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
-									// two pair ---------------- [0] = 3 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 12 (2 - ACE) --------- [0] represents hand rank, [1] represents the first pair, [2] the second
-									// is a extra cell needed for the high card? or will we assume [2] is the high card
+	//hand strength ----------------------------------------------------------------------------------
+	// nothing / high card ----- [0] = 1 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
+	// single pair ------------- [0] = 2 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
+	// two pair ---------------- [0] = 3 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 12 (2 - ACE) --------- [0] represents hand rank, [1] represents the first pair, [2] the second
+												// is a extra cell needed for the high card? or will we assume [2] is the high card
 
-									// Three pair -------------- [0] = 4 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
-									// Straight ---------------- [0] = 5 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
-									// Flush ------------------- [0] = 6 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 3 (The suit) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card, [2] card suit
-									// Full House -------------- [0] = 7 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 12 (2 - ACE) --------- [0] represents hand rank, [1] represents the first pair, [2] the second pair. 
-									//same question as two pair, should I set it up with the high card? Or just program it so [2] is also the high card
+												// Three pair -------------- [0] = 4 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
+												// Straight ---------------- [0] = 5 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
+												// Flush ------------------- [0] = 6 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 3 (The suit) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card, [2] card suit
+												// Full House -------------- [0] = 7 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 12 (2 - ACE) --------- [0] represents hand rank, [1] represents the first pair, [2] the second pair. 
+												//same question as two pair, should I set it up with the high card? Or just program it so [2] is also the high card
 
-									// Four of a Kind ---------- [0] = 8 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
-									// Straight Flush ---------- [0] = 9 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 3 (The suit) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card, [2] card suit
-									// Royal Flush ------------- [0] = 10 ---- [1] = 0-3 (suits) ----- no additional cells ----- the only variance this hand can have is the suit. 
+												// Four of a Kind ---------- [0] = 8 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
+												// Straight Flush ---------- [0] = 9 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 3 (The suit) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card, [2] card suit
+												// Royal Flush ------------- [0] = 10 ---- [1] = 0-3 (suits) ----- no additional cells ----- the only variance this hand can have is the suit. 
 
 
 	int * cardRanks = new int[7];
@@ -185,7 +193,16 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 	result[5] = communityCards.deck[3];
 	result[6] = communityCards.deck[4];
 
-	
+	int * handStrength1 = new int[4];
+	int * handStrength2 = new int[4];
+	int * handStrength3 = new int[4];
+	int * handStrength4 = new int[4];
+
+	handStrength1 = checkOfaKinds(result);
+	cout << "now checking flush" << endl;
+	handStrength3 = checkForFlushes(result);
+
+/*	
 	cout << "printing out the full hand" << endl; //alright we got all 7 cards in an array
 	for (int i = 0; i < 7; i++)
 	{
@@ -288,19 +305,6 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 		kicker = result[0]%13;
 	}
 
-	/* pretty sure I wrote this up earlier
-	if ((ofAKind1 != 0 && ofAKind2 != 0) && (ofAKind1 > ofAKind2)) //basically in the case of a 2 pair, full house, or in the weird ass case that you have a four of a kind and a kicker pair
-	{
-		highCard = result[0];
-		kicker = result[1];
-	}
-
-	if ((ofAKind1 != 0 && ofAKind2 != 0) && (ofAKind1 < ofAKind2)) //basically in the case of a 2 pair, full house, or in the weird ass case that you have a four of a kind and a kicker pair
-	{
-		highCard = result[1];
-		kicker = result[0];
-	}
-	*/
 
 	switch (ofAKind1) {
 	case 0: //card one is nothing.
@@ -396,9 +400,13 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 		}
 		break;
 	}
+	*/
 
+int* winningHand = handStrength1;
+//if (handStrength2[0] > winningHand[0]) { winningHand = handStrength2; }
+winningHand = compareHandStr(winningHand, handStrength3); // Check if flush is better than what is out. 
+//if (handStrength4[0] > winningHand[0]) { winningHand = handStrength4; }
 
-	// I will get to tint sameSuit = 0; 
 
 
 	/*
@@ -417,7 +425,7 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 	cout << endl;
 	*/
 
-	return handStrength;
+	return winningHand;
 }
 
 
@@ -433,4 +441,373 @@ void Game::printHandStrength(int * handStrength) //for testing purposes to print
 	}
 	cout << endl;
 	return;
+}
+
+int* Game::checkOfaKinds(int * cardsInPlay) 
+{
+	/*
+	result[0] = playerHand.deck[0];
+	result[1] = playerHand.deck[1];
+	result[2] = communityCards.deck[0];
+	result[3] = communityCards.deck[1];
+	result[4] = communityCards.deck[2];
+	result[5] = communityCards.deck[3];
+	result[6] = communityCards.deck[4];
+	*/
+	int * handStrength = new int[4];
+
+	int * cardsInSuit = new int[7];
+
+	for (int i = 0; i < 7; i++)
+	{
+		cardsInSuit[i] = cardsInPlay[i]/13;
+
+	}
+	cout << "printing out the full hand" << endl; //alright we got all 7 cards in an array
+	for (int i = 0; i < 7; i++)
+	{
+		cout << cardsInPlay[i] % 13 << "   ";
+	}
+
+	cout << endl;
+
+
+
+	int ofAKind1 = 0, ofAKind2 = 0;
+	bool pocketPair = false; // is this needed? for any reason.
+	int highCard = 0;
+	int kicker = 0;
+
+	if (cardsInPlay[0] % 13 == cardsInPlay[1] % 13)  //pocket pair
+	{
+		pocketPair = true;
+		ofAKind1++;
+		highCard = cardsInPlay[0];
+		for (int i = 2; i < 5; i++)
+		{
+			if (cardsInPlay[0] % 13 == cardsInPlay[i] % 13)
+			{
+				ofAKind1++;
+			}
+		}
+	}
+	else //everything else
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			if (cardsInPlay[0] % 13 == cardsInPlay[i + 2] % 13)
+			{
+				ofAKind1++;
+			}
+		}
+		for (int j = 0; j < 5; j++)
+		{
+			if (cardsInPlay[1] % 13 == cardsInPlay[j + 2] % 13)
+			{
+				ofAKind2++;
+			}
+		}
+	}
+	cout << "                                        of a kind1 = " << ofAKind1 << "  and of a kind2 = " << ofAKind2 << endl;
+
+	if (ofAKind1 == 0 && ofAKind2 == 0) //Nothing in the hand, just need to set highcard and kicker
+	{
+		if (cardsInPlay[0] % 13 > cardsInPlay[1] % 13)
+		{
+			highCard = cardsInPlay[0] % 13;
+			kicker = cardsInPlay[1] % 13;
+		}
+		else
+		{
+			highCard = cardsInPlay[1] % 13;
+			kicker = cardsInPlay[0] % 13;
+		}
+	}
+
+	if (ofAKind1 != 0 && ofAKind2 != 0) //at least a 2 pair, can lead to full house. 
+	{
+		if (ofAKind1 == ofAKind2)
+		{
+			if (cardsInPlay[0] % 13 > cardsInPlay[1] % 13)
+			{
+				highCard = cardsInPlay[0] % 13;
+				kicker = cardsInPlay[1] % 13;
+			}
+			else
+			{
+				highCard = cardsInPlay[1] % 13;
+				kicker = cardsInPlay[0] % 13;
+			}
+		}
+
+		if (ofAKind1 > ofAKind2)
+		{
+			highCard = cardsInPlay[0] % 13;
+			kicker = cardsInPlay[1] % 13;
+		}
+
+		if (ofAKind1 < ofAKind2)
+		{
+			highCard = cardsInPlay[1] % 13;
+			kicker = cardsInPlay[0] % 13;
+		}
+	}
+
+	if (ofAKind1 != 0 && ofAKind2 == 0) //single pair, first card of a kind.
+	{
+		highCard = cardsInPlay[0] % 13;
+		kicker = cardsInPlay[1] % 13;
+	}
+
+	if (ofAKind1 == 0 && ofAKind2 != 0) //single pair, second card of a kind. 
+	{
+		highCard = cardsInPlay[1] % 13;
+		kicker = cardsInPlay[0] % 13;
+	}
+
+
+	switch (ofAKind1) {
+	case 0: //card one is nothing.
+		switch (ofAKind2) {
+		case 0:
+			handStrength[0] = 1;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		case 1:
+			handStrength[0] = 2;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break; //pair
+		case 2:
+			handStrength[0] = 4;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break; //3 of a kind
+		case 3: handStrength[0] = 8; handStrength[1] = highCard; handStrength[2] = kicker; break;//4 of a kind
+		}
+		break;
+	case 1: //pair
+		switch (ofAKind2) {
+		case 0:
+			handStrength[0] = 2;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		case 1:
+			handStrength[0] = 3;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		case 2:
+			handStrength[0] = 7;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		case 3:
+			handStrength[0] = 8;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		}
+		break;
+	case 2: //three of a kind
+		switch (ofAKind2) {
+		case 0:
+			handStrength[0] = 4;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		case 1:
+			handStrength[0] = 7;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		case 2:
+			handStrength[0] = 7;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		case 3:
+			handStrength[0] = 8;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		}
+		break;
+	case 3: //four of a kind
+		switch (ofAKind2) {
+		case 0:
+			handStrength[0] = 8;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		case 1:
+			handStrength[0] = 8;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		case 2:
+			handStrength[0] = 8;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		case 3:
+			handStrength[0] = 8;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break; //2 four of a kinds, not possible.
+		}
+		break;
+	}
+	printHandStrength(handStrength);
+	return handStrength;
+}
+
+
+int * Game::checkForFlushes(int * cardsInPlay){
+	int * handStrength = new int[4];
+
+	int * cardSUITS = new int[7];
+	for (int i = 0; i < 7; i++)
+	{
+		cardSUITS[i] = getintSUIT(cardsInPlay[i]);
+	}
+
+	//checkOfaKinds(cardsInPlay);
+	/*cout << "printing out the full hand" << endl; //alright we got all 7 cards in an array
+	for (int i = 0; i < 7; i++)
+	{
+		cout << cardsInPlay[i] % 13 << "   ";
+	}*/
+
+	cout << endl << "printing out suit" << endl; //alright we got all 7 cards in an array
+
+	for (int i = 0; i < 7; i++)
+	{
+		cout << cardSUITS[i] << "   ";
+	}
+
+	cout << endl;
+
+	int sameSuit1 = 0, sameSuit2 = 0;
+	bool pocketSuits = false; // is this needed? for any reason.
+	int highCard = 0;
+	int kicker = 0;
+
+	if (cardSUITS[0] == cardSUITS[1])  //pocket pair
+	{
+		pocketSuits = true;
+		sameSuit1++;
+		highCard = cardSUITS[0];
+		for (int i = 2; i < 5; i++)
+		{
+			if (cardSUITS[0] == cardSUITS[i])
+			{
+				sameSuit1++;
+			}
+		}
+	}
+	else //everything else
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			if (cardSUITS[0] == cardSUITS[i + 2])
+			{
+				sameSuit1++;
+			}
+		}
+		for (int j = 0; j < 5; j++)
+		{
+			if (cardSUITS[1] == cardSUITS[j + 2])
+			{
+				sameSuit2++;
+			}
+		}
+	}
+	cout << "                                        sameSuit1 = " << sameSuit1 << "  and sameSuit2 = " << sameSuit2 << endl << endl;
+
+	if(sameSuit1 == 4)
+	{
+		highCard = cardsInPlay[0] % 13;
+		kicker = cardsInPlay[1] % 13;
+	}
+	if (sameSuit2 == 4)
+	{
+		highCard = cardsInPlay[1] % 13;
+		kicker = cardsInPlay[0] % 13;
+	}
+
+	else
+	{
+		if (cardsInPlay[0] % 13 > cardsInPlay[1] % 13)
+		{
+			highCard = cardsInPlay[0] % 13;
+			kicker = cardsInPlay[1] % 13;
+		}
+		else
+		{
+			highCard = cardsInPlay[1] % 13;
+			kicker = cardsInPlay[0] % 13;
+		}
+	}
+
+
+	switch (sameSuit1) {
+	case 0:
+	case 1:
+	case 2:
+	case 3:
+		switch (sameSuit2) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+			handStrength[0] = 1;
+			handStrength[1] = highCard;
+			handStrength[2] = kicker;
+			break;
+		
+		case 4:
+			handStrength[0] = 6; handStrength[1] = highCard; handStrength[2] = kicker; handStrength[3] = getintSUIT(cardsInPlay[1]); break; //card2 has a flush
+		}
+		break;
+
+	case 4: //four of a kind
+		switch (sameSuit2) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4: //not possible. 
+			handStrength[0] = 6; handStrength[2] = highCard; handStrength[3] = kicker; handStrength[4] = getintSUIT(cardsInPlay[0]); break; //card2 has a flush
+		}
+		break;
+	}
+	printHandStrength(handStrength);
+	return handStrength;
+}
+
+int Game::getintSUIT(int val)
+{
+	int suit = -1;
+	int s = val / 13;
+	switch (s) {
+	case 0: suit = 0; break;
+	case 1: suit = 1; break;
+	case 2: suit = 2; break;
+	case 3:
+	case 4: suit = 3; break;
+
+	} // 0 spade 1 club 2 heart 3 diamond.
+	return suit;
+}
+
+int * Game::compareHandStr(int * handstr1, int * handstr2)
+{
+	for (int i = 0; i < 4; i ++){
+		if (handstr1[i] > handstr2[i]) { return handstr1; }
+		if (handstr1[i] < handstr2[i]) { return handstr2; }
+	}
+	if (handstr1[3] == handstr2[3]) { return handstr1; }
 }
