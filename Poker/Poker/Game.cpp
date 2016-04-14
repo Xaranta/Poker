@@ -18,8 +18,8 @@ Game::Game()
 
 	cout << "beginning game loop" << endl << endl;
 	
-	int winningHands[10][4];
-	int rounds = 10;
+	int winningHands[15][4];
+	int rounds = 15;
 	for (int i = 0; i < rounds; i++)
 	{
 		cout << endl << endl;
