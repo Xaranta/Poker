@@ -15,8 +15,12 @@ public:
 	void printHandStrength(int * handStrength);
 	int * checkOfaKinds(int * cardsInPlay);
 	int * checkForFlushes(int * cardsInPlay);
+	int* checkForStraights(int * cardsInPlay);
 
 	int * compareHandStr(int * handstr1, int * handstr2);
 
 	int getintSUIT(int val);
+
+	int * straightSort(int * arr, int size);
 };
+

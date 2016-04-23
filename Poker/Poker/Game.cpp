@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Deck.h"
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 Game::Game()
@@ -110,7 +111,15 @@ Game::Game()
 		int* comp2HandStr = checkHand(compHand2, communityCards);
 
 		cout << "now checking Computer3's hand" << endl;
-		int* comp3HandStr = checkHand(compHand3, communityCards);
+		//int* comp3HandStr = checkHand(compHand3, communityCards);
+
+		vector<int> test1 = { 14,15 };
+		vector<int> test2 = { 29,30,28,44,7 };
+
+		Deck t1(test1);
+		Deck t2(test2);
+
+		int* comp3HandStr = checkHand(t1,t2);
 
 		int* winningHand = playerHandStr;
 		winningHand = compareHandStr(winningHand, comp1HandStr);
@@ -118,11 +127,11 @@ Game::Game()
 		winningHand = compareHandStr(winningHand, comp3HandStr);
 
 
+		//------------------------------------------------
+		//calculate and print players hands
 
 		/*cout << endl << "player hand strength" << endl;
 		printHandStrength(playerHandStr);
-
-
 
 		cout << "Computer 1 hand strength" << endl;
 		printHandStrength(comp1HandStr);
@@ -133,6 +142,7 @@ Game::Game()
 		cout << "Computer 3 hand strength" << endl;
 		printHandStrength(comp3HandStr);
 		*/
+
 		for (int j = 0; j<4; j++)
 		{
 			winningHands[i][j] = winningHand[j];
@@ -198,219 +208,23 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 	int * handStrength3 = new int[4];
 	int * handStrength4 = new int[4];
 
+	cout << "now checking of a kinds" << endl;
 	handStrength1 = checkOfaKinds(result);
+
 	cout << "now checking flush" << endl;
-	handStrength3 = checkForFlushes(result);
+	handStrength2 = checkForFlushes(result);
 
-/*	
-	cout << "printing out the full hand" << endl; //alright we got all 7 cards in an array
-	for (int i = 0; i < 7; i++)
-	{
-		cout << result[i]%13 << "   ";
-	}
-
-	cout << endl;
-	
-
-
-	int ofAKind1 = 0, ofAKind2 = 0;
-	bool pocketPair = false; // is this needed? for any reason.
-	int highCard = 0;
-	int kicker = 0;
-
-	if (result[0]%13 == result[1]%13)  //pocket pair
-	{
-		pocketPair = true;
-		ofAKind1++;
-		highCard = result[0];
-		for (int i = 2; i < 5; i++)
-		{
-			if (result[0]%13 == result[i]%13)
-			{
-				ofAKind1++;
-			}
-		}
-	}
-	else //everything else
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			if (result[0]%13 == result[i + 2]%13)
-			{
-				ofAKind1++;
-			}
-		}
-		for (int j = 0; j < 5; j++)
-		{
-			if (result[1]%13 == result[j + 2]%13)
-			{
-				ofAKind2++;
-			}
-		}
-	}
-	cout << "                                        of a kind1 = " << ofAKind1 << "  and of a kind2 = " << ofAKind2 << endl;
-
-	if (ofAKind1 == 0 && ofAKind2 == 0) //Nothing in the hand, just need to set highcard and kicker
-	{
-		if (result[0]%13 > result[1]%13)
-		{
-			highCard = result[0]%13;
-			kicker = result[1]%13;
-		}
-		else
-		{
-			highCard = result[1]%13;
-			kicker = result[0]%13;
-		}
-	}
-
-	if (ofAKind1 != 0 && ofAKind2 != 0) //at least a 2 pair, can lead to full house. 
-	{
-		if (ofAKind1 == ofAKind2)
-		{
-			if (result[0]%13 > result[1]%13)
-			{
-				highCard = result[0]%13;
-				kicker = result[1]%13;
-			}
-			else
-			{
-				highCard = result[1]%13;
-				kicker = result[0]%13;
-			}
-		}
-
-		if (ofAKind1 > ofAKind2)
-		{
-			highCard = result[0]%13;
-			kicker = result[1]%13;
-		}
-
-		if (ofAKind1 < ofAKind2)
-		{
-			highCard = result[1]%13;
-			kicker = result[0]%13;
-		}
-	}
-
-	if (ofAKind1 != 0 && ofAKind2 == 0) //single pair, first card of a kind.
-	{
-		highCard = result[0]%13;
-		kicker = result[1]%13;
-	}
-
-	if (ofAKind1 == 0 && ofAKind2 != 0) //single pair, second card of a kind. 
-	{
-		highCard = result[1]%13;
-		kicker = result[0]%13;
-	}
-
-
-	switch (ofAKind1) {
-	case 0: //card one is nothing.
-		switch (ofAKind2) {
-		case 0:
-			handStrength[0] = 1;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		case 1:
-			handStrength[0] = 2;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break; //pair
-		case 2:
-			handStrength[0] = 4;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break; //3 of a kind
-		case 3: handStrength[0] = 8; handStrength[2] = highCard; handStrength[3] = kicker; break;//4 of a kind
-		}
-		break;
-	case 1: //pair
-		switch (ofAKind2) {
-		case 0:
-			handStrength[0] = 2;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		case 1:
-			handStrength[0] = 3;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		case 2:
-			handStrength[0] = 7;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		case 3:
-			handStrength[0] = 8;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		}
-		break;
-	case 2: //three of a kind
-		switch (ofAKind2) {
-		case 0:
-			handStrength[0] = 4;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		case 1:
-			handStrength[0] = 7;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		case 2:
-			handStrength[0] = 7;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		case 3:
-			handStrength[0] = 8;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		}
-		break;
-	case 3: //four of a kind
-		switch (ofAKind2) {
-		case 0:
-			handStrength[0] = 8;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		case 1:
-			handStrength[0] = 8;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		case 2:
-			handStrength[0] = 8;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break;
-		case 3:
-			handStrength[0] = 8;
-			handStrength[1] = highCard;
-			handStrength[2] = kicker;
-			break; //2 four of a kinds, not possible.
-		}
-		break;
-	}
-	*/
+	cout << "now checking straights" << endl;
+	handStrength3 = checkForStraights(result);
 
 int* winningHand = handStrength1;
-//if (handStrength2[0] > winningHand[0]) { winningHand = handStrength2; }
-winningHand = compareHandStr(winningHand, handStrength3); // Check if flush is better than what is out. 
-//if (handStrength4[0] > winningHand[0]) { winningHand = handStrength4; }
+winningHand = compareHandStr(winningHand, handStrength2);
 
+winningHand = compareHandStr(winningHand, handStrength3);
 
 
 	/*
-	cout << "printing ofaKind1 " << ofAKind1 << " and ofaKind2 " << ofAKind2 << endl;
+	cout << "printing inSequence1 " << inSequence1 << " and ofaKind2 " << ofAKind2 << endl;
 	cout << "printing highcard " << highCard << " and kicker " << kicker << endl;
 	
 	cout << "printing handStrength array" << endl << endl;
@@ -443,6 +257,10 @@ void Game::printHandStrength(int * handStrength) //for testing purposes to print
 	return;
 }
 
+
+//--------------------------------------------------------------------------------------
+// Check for of a kinds
+//--------------------------------------------------------------------------------------
 int* Game::checkOfaKinds(int * cardsInPlay) 
 {
 	/*
@@ -664,7 +482,9 @@ int* Game::checkOfaKinds(int * cardsInPlay)
 	return handStrength;
 }
 
-
+//--------------------------------------------------------------------------------------
+// Check for Flushes
+//--------------------------------------------------------------------------------------
 int * Game::checkForFlushes(int * cardsInPlay){
 	int * handStrength = new int[4];
 
@@ -803,6 +623,164 @@ int Game::getintSUIT(int val)
 	return suit;
 }
 
+//--------------------------------------------------------------------------------------
+// Check Straights
+//--------------------------------------------------------------------------------------
+
+int* Game::checkForStraights(int * cardsInPlay)
+{
+	/*
+	result[0] = playerHand.deck[0];
+	result[1] = playerHand.deck[1];
+	result[2] = communityCards.deck[0];
+	result[3] = communityCards.deck[1];
+	result[4] = communityCards.deck[2];
+	result[5] = communityCards.deck[3];
+	result[6] = communityCards.deck[4];
+	*/
+
+	int * handStrength = new int[4];
+
+	int * cardsInStraight = new int[7];
+	
+	int handCard1 = cardsInPlay[0];
+	int handCard2 = cardsInPlay[1];
+
+	cardsInStraight = cardsInPlay;
+	/*do we need this?
+	
+	for (int i = 0; i < 7; i++)
+	{
+		cardsInStraight[i] = cardsInPlay[i] % 13;
+
+	}
+	*///-------
+
+	cout << "printing out the full hand" << endl; //alright we got all 7 cards in an array
+	for (int i = 0; i < 7; i++)
+	{
+		cout << cardsInPlay[i] % 13 << "   ";
+	}
+
+	cout << endl;
+	
+
+	cardsInStraight = straightSort(cardsInStraight, 7);
+
+	cout << "printing out the sorted hand" << endl; //alright we got all 7 cards in an array
+	for (int i = 0; i < 7; i++)
+	{
+		cout << cardsInStraight[i] << "   ";
+	}
+
+	cout << endl;
+
+	
+
+	int inSequence1 = 0, inSequence2 = 0;
+	bool pocketPair = false; // is this needed? for any reason.
+	int highCard = -1;
+	int kicker = -1;
+
+	int seqHigh = -1; // I want to save the highest point in the sequence;
+
+	int seqStart = 0; //keep track of the low card in the straight
+
+	int offset = 0; //for when there are doubles in the sequence. IMPLEMENT THIS NEXT
+
+	for (int i = 1; i < 7; i++)
+	{
+		if (cardsInStraight[seqStart] == cardsInStraight[i]) //for example if the first 2 are the same value, just move seqStart to the next index.
+		{
+			seqStart++;
+		}
+		if(cardsInStraight[seqStart]+i-offset==cardsInStraight[i])
+		{
+			inSequence1++;
+			seqHigh = cardsInStraight[i];
+		}
+		if (inSequence1 >= 4 && cardsInStraight[seqStart] + 1 - offset == cardsInStraight[i]) //if you have a straight longer than 5 cards
+		{
+			inSequence1++;
+			seqHigh = cardsInStraight[i];
+			seqStart++;
+		}
+
+		if(cardsInStraight[seqStart] + i - offset != cardsInStraight[i])
+		{
+			if (cardsInStraight[i-1] == cardsInStraight[i])
+			{
+				offset++;
+			}
+			else if (inSequence1 < 4 )
+			{
+				inSequence1 = 0;
+				seqStart++;
+			}
+			if (inSequence1 >4)
+			{
+				seqStart++;
+			}
+			
+		}
+	}
+	cout << " hand cards" << handCard1 << " " << handCard2 << endl;
+	cout << "                                   number of cards in sequence = " << inSequence1 << endl;
+
+	if (inSequence1 < 4) //No straight just need to set highcard and kicker
+	{
+		if (handCard1 > handCard2)
+		{
+			highCard = handCard1;
+			kicker = handCard2;
+		}
+		else
+		{
+			highCard = handCard2;
+			kicker = handCard1;
+		}
+	}
+
+	if (inSequence1 >=4) //at least a 2 pair, can lead to full house. 
+	{
+		highCard = seqHigh;
+		if (handCard1 > handCard2)
+		{
+			kicker = handCard1;
+		}
+		else
+		{
+			kicker = handCard2;
+		}
+		
+	}
+
+
+	switch (inSequence1) {
+	case 0: //card one is nothing.
+	case 1:
+	case 2:
+	case 3:
+		handStrength[0] = 1;
+		handStrength[1] = highCard;
+		handStrength[2] = kicker;
+		break;
+	case 4:
+	case 5:
+	case 6:
+		handStrength[0] = 5;
+		handStrength[1] = highCard;
+		handStrength[2] = kicker;
+		break;
+	}
+	printHandStrength(handStrength);
+	return handStrength;
+}
+
+
+
+
+
 int * Game::compareHandStr(int * handstr1, int * handstr2)
 {
 	for (int i = 0; i < 4; i ++){
@@ -810,4 +788,24 @@ int * Game::compareHandStr(int * handstr1, int * handstr2)
 		if (handstr1[i] < handstr2[i]) { return handstr2; }
 	}
 	if (handstr1[3] == handstr2[3]) { return handstr1; }
+}
+
+int * Game::straightSort(int * arr, int size)
+{
+	int min, temp;
+	for (int i = 0; i < size; i++)
+	{
+		min = i;
+		for (int j = i + 1; j < size; j++)
+		{
+			if (arr[j] % 13 <= arr[min] % 13)
+			{
+				min = j;
+			}
+		}
+		temp = arr[i]% 13;
+		arr[i] = arr[min] % 13;
+		arr[min] = temp % 13;
+	}
+	return arr;
 }
