@@ -113,8 +113,8 @@ Game::Game()
 		cout << "now checking Computer3's hand" << endl;
 		//int* comp3HandStr = checkHand(compHand3, communityCards);
 
-		vector<int> test1 = { 14,15 };
-		vector<int> test2 = { 29,30,28,44,7 };
+		vector<int> test1 = { 48,50 };
+		vector<int> test2 = { 11,52,9,51,49 };
 
 		Deck t1(test1);
 		Deck t2(test2);
@@ -125,6 +125,7 @@ Game::Game()
 		winningHand = compareHandStr(winningHand, comp1HandStr);
 		winningHand = compareHandStr(winningHand, comp2HandStr);
 		winningHand = compareHandStr(winningHand, comp3HandStr);
+
 
 
 		//------------------------------------------------
@@ -217,10 +218,18 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 	cout << "now checking straights" << endl;
 	handStrength3 = checkForStraights(result);
 
+	if(handStrength2[0] == 6 && handStrength3[0] == 5)
+	{ 
+		cout << "now checking straight flushes" << endl;
+		handStrength4 = checkForStraightFlushes(result);
+	}
+	
+
 int* winningHand = handStrength1;
 winningHand = compareHandStr(winningHand, handStrength2);
-
 winningHand = compareHandStr(winningHand, handStrength3);
+
+
 
 
 	/*
@@ -520,7 +529,7 @@ int * Game::checkForFlushes(int * cardsInPlay){
 		pocketSuits = true;
 		sameSuit1++;
 		highCard = cardSUITS[0];
-		for (int i = 2; i < 5; i++)
+		for (int i = 2; i < 7; i++)
 		{
 			if (cardSUITS[0] == cardSUITS[i])
 			{
@@ -646,15 +655,14 @@ int* Game::checkForStraights(int * cardsInPlay)
 	int handCard1 = cardsInPlay[0];
 	int handCard2 = cardsInPlay[1];
 
-	cardsInStraight = cardsInPlay;
-	/*do we need this?
-	
+	//cardsInStraight = cardsInPlay;
+
 	for (int i = 0; i < 7; i++)
 	{
-		cardsInStraight[i] = cardsInPlay[i] % 13;
+		cardsInStraight[i] = cardsInPlay[i];
 
 	}
-	*///-------
+
 
 	cout << "printing out the full hand" << endl; //alright we got all 7 cards in an array
 	for (int i = 0; i < 7; i++)
@@ -715,6 +723,7 @@ int* Game::checkForStraights(int * cardsInPlay)
 			else if (inSequence1 < 4 )
 			{
 				inSequence1 = 0;
+				offset++;
 				seqStart++;
 			}
 			if (inSequence1 >4)
@@ -777,7 +786,173 @@ int* Game::checkForStraights(int * cardsInPlay)
 	return handStrength;
 }
 
+//--------------------------------------------------------------------------------------
+// Check Straight Flushes
+//--------------------------------------------------------------------------------------
 
+int* Game::checkForStraightFlushes(int * cardsInPlay)
+{
+	/*
+	result[0] = playerHand.deck[0];
+	result[1] = playerHand.deck[1];
+	result[2] = communityCards.deck[0];
+	result[3] = communityCards.deck[1];
+	result[4] = communityCards.deck[2];
+	result[5] = communityCards.deck[3];
+	result[6] = communityCards.deck[4];
+	*/
+
+	int * handStrength = new int[4];
+
+	int * cardsInStraightFlush = new int[7];
+
+	int handCard1 = cardsInPlay[0];
+	int handCard2 = cardsInPlay[1];
+
+	//cardsInStraightFlush = cardsInPlay;
+
+
+	for (int i = 0; i < 7; i++)
+	{
+	cardsInStraightFlush[i] = cardsInPlay[i];
+
+	}
+
+	cout << "printing out the full hand" << endl; //alright we got all 7 cards in an array
+	for (int i = 0; i < 7; i++)
+	{
+		if (cardsInPlay[i] % 13 == 0)
+		{
+			cout << 13 << "   ";
+		}
+		else
+			cout << cardsInPlay[i] % 13 << "   ";
+	}
+
+	cout << endl;
+
+
+	cardsInStraightFlush = straightFlushSort(cardsInStraightFlush, 7);
+
+	cout << "printing out the sorted hand for Straight Flush" << endl; //alright we got all 7 cards in an array
+	for (int i = 0; i < 7; i++)
+	{
+		cout << cardsInStraightFlush[i] << "   ";
+	}
+
+	cout << endl;
+
+
+
+	int inSequence1 = 0, inSequence2 = 0;
+	bool pocketPair = false; // is this needed? for any reason.
+	int highCard = -1;
+	int kicker = -1;
+	bool royalFlush = false;
+	int seqHigh = -1; // I want to save the highest point in the sequence;
+
+	int seqStart = 0; //keep track of the low card in the straight
+
+	int offset = 0; //for when there are doubles in the sequence. IMPLEMENT THIS NEXT
+
+	for (int i = 1; i < 7; i++)
+	{
+		if (cardsInStraightFlush[seqStart] == cardsInStraightFlush[i]) //for example if the first 2 are the same value, just move seqStart to the next index.
+		{
+			seqStart++;
+		}
+		if (cardsInStraightFlush[seqStart] + i - offset == cardsInStraightFlush[i])
+		{
+			inSequence1++;
+			seqHigh = cardsInStraightFlush[i];
+		}
+		if (inSequence1 >= 4 && cardsInStraightFlush[seqStart] + 1 - offset == cardsInStraightFlush[i]) //if you have a straight longer than 5 cards
+		{
+			inSequence1++;
+			seqHigh = cardsInStraightFlush[i];
+			seqStart++;
+		}
+
+		if (cardsInStraightFlush[seqStart] + i - offset != cardsInStraightFlush[i])
+		{
+			if (cardsInStraightFlush[i - 1] == cardsInStraightFlush[i])
+			{
+				offset++;
+			}
+			else if (inSequence1 < 4)
+			{
+				inSequence1 = 0;
+				offset++;
+				seqStart++;
+			}
+			if (inSequence1 >4)
+			{
+				seqStart++;
+			}
+
+		}
+	}
+	cout << " hand cards" << handCard1 << " " << handCard2 << endl;
+	cout << "                                   number of cards in sequence = " << inSequence1 << endl;
+
+	if (inSequence1 < 4) //No straight just need to set highcard and kicker
+	{
+		if (handCard1 > handCard2)
+		{
+			highCard = handCard1;
+			kicker = handCard2;
+		}
+		else
+		{
+			highCard = handCard2;
+			kicker = handCard1;
+		}
+	}
+
+	if (inSequence1 >= 4) // 5 cards in a row
+	{
+
+		highCard = seqHigh;
+		if (handCard1 > handCard2)
+		{
+			kicker = handCard1;
+		}
+		else
+		{
+			kicker = handCard2;
+		}
+
+		if (cardsInStraightFlush[seqStart] % 13 == 9 && cardsInStraightFlush[seqHigh] % 13 == 0)
+		{
+			royalFlush = true;
+		}
+	}
+
+
+	switch (inSequence1) {
+	case 0: //card one is nothing.
+	case 1:
+	case 2:
+	case 3:
+		handStrength[0] = 1;
+		handStrength[1] = highCard;
+		handStrength[2] = kicker;
+		break;
+	case 4:
+	case 5:
+	case 6:
+		handStrength[0] = 9;
+		if (royalFlush == true)
+		{
+			handStrength[0] = 10;
+		}
+		handStrength[1] = highCard;
+		handStrength[2] = kicker;
+		break;
+	}
+	printHandStrength(handStrength);
+	return handStrength;
+}
 
 
 
@@ -792,20 +967,53 @@ int * Game::compareHandStr(int * handstr1, int * handstr2)
 
 int * Game::straightSort(int * arr, int size)
 {
+	int min, temp, var1, var2;
+	for (int i = 0; i < size; i++)
+	{
+		min = i;
+		for (int j = i + 1; j < size; j++)
+		{
+			if (arr[j] % 13 == 0) { var1 = 13; } //there has to be a nicer way to do this. this is such a gross way to program.
+			else { var1 = arr[j] % 13; }
+
+			if (arr[min] % 13 == 0) { var2 = 13; } //there has to be a nicer way to do this. this is such a gross way to program.
+			else { var2 = arr[min] % 13; }
+
+			if (var1 <= var2)
+			{
+				min = j;
+			}
+		}
+		
+		temp = arr[i]% 13;
+		if (arr[i] % 13 == 0) { temp = 13; }
+
+		arr[i] = arr[min] % 13;
+		if (arr[min] % 13 == 0) { arr[i] = 13; }
+
+		arr[min] = temp % 13;
+		if (temp % 13 == 0) { arr[min] = 13; }
+	}
+	return arr;
+}
+
+int * Game::straightFlushSort(int * arr, int size)
+{
 	int min, temp;
 	for (int i = 0; i < size; i++)
 	{
 		min = i;
 		for (int j = i + 1; j < size; j++)
 		{
-			if (arr[j] % 13 <= arr[min] % 13)
+			if (arr[j]<= arr[min])
 			{
 				min = j;
 			}
 		}
-		temp = arr[i]% 13;
-		arr[i] = arr[min] % 13;
-		arr[min] = temp % 13;
+		temp = arr[i];
+		arr[i] = arr[min];
+		arr[min] = temp;
 	}
 	return arr;
 }
+
