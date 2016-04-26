@@ -24,8 +24,7 @@ public:
 	//GETTERS: VALUE, SUIT, SYMBOL, next
 	int getVALUE()
 	{   
-		if (cardID % 13 == 0) return 13; //I don't want to deal with 0's when it comes sort for straights.
-		else return cardID % 13;
+		return cardID % 13;
 	} 
 
 	int getSUIT(){ return cardID % 4; } // 0 spade 1 club 2 heart 3 diamond.
