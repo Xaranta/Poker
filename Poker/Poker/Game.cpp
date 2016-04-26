@@ -179,17 +179,17 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 	// nothing / high card ----- [0] = 1 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
 	// single pair ------------- [0] = 2 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
 	// two pair ---------------- [0] = 3 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 12 (2 - ACE) --------- [0] represents hand rank, [1] represents the first pair, [2] the second
-												// is a extra cell needed for the high card? or will we assume [2] is the high card
+	// is a extra cell needed for the high card? or will we assume [2] is the high card
 
-												// Three pair -------------- [0] = 4 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
-												// Straight ---------------- [0] = 5 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
-												// Flush ------------------- [0] = 6 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 3 (The suit) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card, [2] card suit
-												// Full House -------------- [0] = 7 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 12 (2 - ACE) --------- [0] represents hand rank, [1] represents the first pair, [2] the second pair. 
-												//same question as two pair, should I set it up with the high card? Or just program it so [2] is also the high card
+	// Three pair -------------- [0] = 4 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
+	// Straight ---------------- [0] = 5 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
+	// Flush ------------------- [0] = 6 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 3 (The suit) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card, [2] card suit
+	// Full House -------------- [0] = 7 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 12 (2 - ACE) --------- [0] represents hand rank, [1] represents the first pair, [2] the second pair. 
+	//same question as two pair, should I set it up with the high card? Or just program it so [2] is also the high card
 
-												// Four of a Kind ---------- [0] = 8 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
-												// Straight Flush ---------- [0] = 9 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 3 (The suit) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card, [2] card suit
-												// Royal Flush ------------- [0] = 10 ---- [1] = 0-3 (suits) ----- no additional cells ----- the only variance this hand can have is the suit. 
+	// Four of a Kind ---------- [0] = 8 ----- [1] = 0 - 12 (2 - ACE) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card
+	// Straight Flush ---------- [0] = 9 ----- [1] = 0 - 12 (2 - ACE) ----- [2] = 0 - 3 (The suit) ----- no additional cells needed ---- [0] represents hand rank, [1] represents the high card, [2] card suit
+	// Royal Flush ------------- [0] = 10 ---- [1] = 0-3 (suits) ----- no additional cells ----- the only variance this hand can have is the suit. 
 
 
 	int * cardRanks = new int[7];
@@ -639,15 +639,6 @@ int Game::getintSUIT(int val)
 
 int* Game::checkForStraights(int * cardsInPlay)
 {
-	/*
-	result[0] = playerHand.deck[0];
-	result[1] = playerHand.deck[1];
-	result[2] = communityCards.deck[0];
-	result[3] = communityCards.deck[1];
-	result[4] = communityCards.deck[2];
-	result[5] = communityCards.deck[3];
-	result[6] = communityCards.deck[4];
-	*/
 
 	int * handStrength = new int[4];
 
@@ -656,16 +647,14 @@ int* Game::checkForStraights(int * cardsInPlay)
 	int handCard1 = cardsInPlay[0];
 	int handCard2 = cardsInPlay[1];
 
-	//cardsInStraight = cardsInPlay;
 
 	for (int i = 0; i < 7; i++)
 	{
 		cardsInStraight[i] = cardsInPlay[i];
-
 	}
 
 
-	cout << "printing out the full hand" << endl; //alright we got all 7 cards in an array
+	cout << "printing out the full hand" << endl; //Unsorted cards in play
 	for (int i = 0; i < 7; i++)
 	{
 		cout << cardsInPlay[i] % 13 << "   ";
@@ -676,7 +665,7 @@ int* Game::checkForStraights(int * cardsInPlay)
 
 	cardsInStraight = straightSort(cardsInStraight, 7);
 
-	cout << "printing out the sorted hand" << endl; //alright we got all 7 cards in an array
+	cout << "printing out the sorted hand" << endl; //Sorted cards in play
 	for (int i = 0; i < 7; i++)
 	{
 		cout << cardsInStraight[i] << "   ";
@@ -687,15 +676,15 @@ int* Game::checkForStraights(int * cardsInPlay)
 	
 
 	int inSequence1 = 0, inSequence2 = 0;
-	bool pocketPair = false; // is this needed? for any reason.
+	bool pocketPair = false; // Not sure if we really need this but whatever.
 	int highCard = -1;
 	int kicker = -1;
 
 	int seqHigh = -1; // I want to save the highest point in the sequence;
 
-	int seqStart = 0; //keep track of the low card in the straight
+	int seqStart = 0; //keep track of the index of the low card in the straight
 
-	int offset = 0; //for when there are doubles in the sequence. IMPLEMENT THIS NEXT
+	int offset = 0; //for when there are doubles in the sequence. Not sure if there is a better way to do this but it works for now. 
 
 	for (int i = 1; i < 7; i++)
 	{
@@ -751,7 +740,7 @@ int* Game::checkForStraights(int * cardsInPlay)
 		}
 	}
 
-	if (inSequence1 >=4) //at least a 2 pair, can lead to full house. 
+	if (inSequence1 >=4) //there is a straight. Save the sequenece high as well as the highest kicker card in the players hand. 
 	{
 		highCard = seqHigh;
 		if (handCard1 > handCard2)
@@ -767,7 +756,7 @@ int* Game::checkForStraights(int * cardsInPlay)
 
 
 	switch (inSequence1) {
-	case 0: //card one is nothing.
+	case 0: //No straight
 	case 1:
 	case 2:
 	case 3:
@@ -793,15 +782,6 @@ int* Game::checkForStraights(int * cardsInPlay)
 
 int* Game::checkForStraightFlushes(int * cardsInPlay)
 {
-	/*
-	result[0] = playerHand.deck[0];
-	result[1] = playerHand.deck[1];
-	result[2] = communityCards.deck[0];
-	result[3] = communityCards.deck[1];
-	result[4] = communityCards.deck[2];
-	result[5] = communityCards.deck[3];
-	result[6] = communityCards.deck[4];
-	*/
 
 	int * handStrength = new int[4];
 
@@ -810,16 +790,13 @@ int* Game::checkForStraightFlushes(int * cardsInPlay)
 	int handCard1 = cardsInPlay[0];
 	int handCard2 = cardsInPlay[1];
 
-	//cardsInStraightFlush = cardsInPlay;
-
-
 	for (int i = 0; i < 7; i++)
 	{
 	cardsInStraightFlush[i] = cardsInPlay[i];
 
 	}
 
-	cout << "printing out the full hand" << endl; //alright we got all 7 cards in an array
+	cout << "printing out the full hand" << endl; //printing unsorted hand
 	for (int i = 0; i < 7; i++)
 	{
 		if (cardsInPlay[i] % 13 == 0)
@@ -835,7 +812,7 @@ int* Game::checkForStraightFlushes(int * cardsInPlay)
 
 	cardsInStraightFlush = straightFlushSort(cardsInStraightFlush, 7);
 
-	cout << "printing out the sorted hand for Straight Flush" << endl; //alright we got all 7 cards in an array
+	cout << "printing out the sorted hand for Straight Flush" << endl; //printing sorted hand.
 	for (int i = 0; i < 7; i++)
 	{
 		cout << cardsInStraightFlush[i] << "   ";
@@ -845,16 +822,15 @@ int* Game::checkForStraightFlushes(int * cardsInPlay)
 
 
 
-	int inSequence1 = 0, inSequence2 = 0;
-	bool pocketPair = false; // is this needed? for any reason.
+	int inSequence1 = 0;
 	int highCard = -1;
 	int kicker = -1;
 	bool royalFlush = false;
 	int seqHigh = -1; // I want to save the highest point in the sequence;
 
-	int seqStart = 0; //keep track of the low card in the straight
+	int seqStart = 0; //keep track of the index of the low card in the straight
 
-	int offset = 0; //for when there are doubles in the sequence. IMPLEMENT THIS NEXT
+	int offset = 0; //for when there are doubles in the sequence.
 
 	for (int i = 1; i < 7; i++)
 	{
@@ -910,9 +886,9 @@ int* Game::checkForStraightFlushes(int * cardsInPlay)
 		}
 	}
 
-	if (inSequence1 >= 4) // 5 cards in a row
+	if (inSequence1 >= 4) // at least 5 cards in a row
 	{
-		if (cardsInStraightFlush[seqStart] % 13 == 8 && seqHigh % 13 == 12)
+		if (cardsInStraightFlush[seqStart] % 13 == 8 && seqHigh % 13 == 12) //if the sequence begins with a 10, and ends with an ace
 		{
 			royalFlush = true;
 		}
@@ -932,7 +908,7 @@ int* Game::checkForStraightFlushes(int * cardsInPlay)
 
 
 	switch (inSequence1) {
-	case 0: //card one is nothing.
+	case 0: //no straight
 	case 1:
 	case 2:
 	case 3:
@@ -975,11 +951,8 @@ int * Game::straightSort(int * arr, int size)
 		min = i;
 		for (int j = i + 1; j < size; j++)
 		{
-			if (arr[j] % 13 == 0) { var1 = 13; } //there has to be a nicer way to do this. this is such a gross way to program.
-			else { var1 = arr[j] % 13; }
-
-			if (arr[min] % 13 == 0) { var2 = 13; } //there has to be a nicer way to do this. this is such a gross way to program.
-			else { var2 = arr[min] % 13; }
+			 var1 = arr[j] % 13;
+			 var2 = arr[min] % 13; 
 
 			if (var1 <= var2)
 			{
@@ -988,13 +961,10 @@ int * Game::straightSort(int * arr, int size)
 		}
 		
 		temp = arr[i]% 13;
-		if (arr[i] % 13 == 0) { temp = 13; }
 
 		arr[i] = arr[min] % 13;
-		if (arr[min] % 13 == 0) { arr[i] = 13; }
 
 		arr[min] = temp % 13;
-		if (temp % 13 == 0) { arr[min] = 13; }
 	}
 	return arr;
 }
