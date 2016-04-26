@@ -113,8 +113,8 @@ Game::Game()
 		cout << "now checking Computer3's hand" << endl;
 		//int* comp3HandStr = checkHand(compHand3, communityCards);
 
-		vector<int> test1 = { 48,50 };
-		vector<int> test2 = { 11,52,9,51,49 };
+		vector<int> test1 = { 34,36 };
+		vector<int> test2 = { 11,38,9,37,35 };
 
 		Deck t1(test1);
 		Deck t2(test2);
@@ -228,6 +228,7 @@ int* Game::checkHand(Deck &playerHand, Deck &communityCards)
 int* winningHand = handStrength1;
 winningHand = compareHandStr(winningHand, handStrength2);
 winningHand = compareHandStr(winningHand, handStrength3);
+winningHand = compareHandStr(winningHand, handStrength4);
 
 
 
@@ -911,6 +912,10 @@ int* Game::checkForStraightFlushes(int * cardsInPlay)
 
 	if (inSequence1 >= 4) // 5 cards in a row
 	{
+		if (cardsInStraightFlush[seqStart] % 13 == 8 && seqHigh % 13 == 12)
+		{
+			royalFlush = true;
+		}
 
 		highCard = seqHigh;
 		if (handCard1 > handCard2)
@@ -922,10 +927,7 @@ int* Game::checkForStraightFlushes(int * cardsInPlay)
 			kicker = handCard2;
 		}
 
-		if (cardsInStraightFlush[seqStart] % 13 == 9 && cardsInStraightFlush[seqHigh] % 13 == 0)
-		{
-			royalFlush = true;
-		}
+		
 	}
 
 

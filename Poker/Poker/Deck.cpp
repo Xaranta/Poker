@@ -21,7 +21,7 @@ void Deck::fill()
 {
 
 	//creates a deck of 52 cards
-	for (int i = 1; i < 53; i++) {
+	for (int i = 0; i < 52; i++) {
 			addCard(i);
 	}
 
