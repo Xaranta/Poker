@@ -2,48 +2,74 @@
 #include "Card.h"
 #include <iostream>
 #include <time.h>
+#include <vector>
+#include <algorithm>  
+
 using namespace std;
 
 Deck::Deck()
 {
-	top = NULL;
+	vector<int> deck;
 	SIZE = 0;
 }
 
-Deck::Deck(Card *n)
+Deck::Deck(const vector<int>& x)
 {
-	top = n;
+	deck = x;
 }
 void Deck::fill()
 {
-	string suit;
+
 	//creates a deck of 52 cards
-	for (int i = 0; i < 13; i++) {
-		for (int j = 0; j < 4; j++) {
-			switch (j) {
-			case 0: suit = "HEART"; break;
-			case 1: suit = "DIAMOND"; break;
-			case 2: suit = "CLUB"; break;
-			case 3: suit = "SPADE"; break;
-			}//end switch
-			addCard(i, suit);
-		}//end for
-	}//end for
+	for (int i = 0; i < 52; i++) {
+			addCard(i);
+	}
+
 }//end fill
+
+void Deck::addCard(int val)
+{
+	vector<int>::iterator it;
+
+	it = deck.begin();
+	it = deck.insert(it, val);
+	SIZE++;
+
+	//top = new Card(val, s, top);
+}//end addCard
 
 void Deck::drawCard(Deck &d)
 {
-	Card *draw = top;
-	if (draw != NULL) {
-		top = top->getNext();
-		SIZE--;
-		d.addCard(draw->getVALUE(), draw->getSUIT());
-	}
+	if (deck.size() == 0) return;
+
+	vector<int>::iterator it;
+	it = deck.begin();
+	d.addCard(*it);
+	deck.erase(it);
+	return;
+
 }//end drawCard
 
-void Deck::removeCard(int val, string s)
+void Deck::removeCard(int val)
 {
 	//FINDS CARD
+	vector<int>::iterator it;
+
+	it = deck.begin();
+
+	for (int i = 0; i < SIZE; i++)
+	{
+		if (*it == val)
+		{
+			deck.erase(it);
+			cout << "Found it and removed it: " << val << endl;
+			return;
+		}
+	}
+	cout << "Didn't find it" << endl;
+	return;
+
+	/*
 	Card *cur = top;
 	while (cur != NULL && cur->getVALUE() != val && cur->getSUIT() != s)
 		cur = cur->getNext();
@@ -75,18 +101,23 @@ void Deck::removeCard(int val, string s)
 			removeCard(val, s);
 		}//end if
 	}//end else
+
+	*/
 }//end removeCard
 
-void Deck::addCard(int val, string s)
-{
-	SIZE++;
-	top = new Card(val, s, top);
-}//end addCard
+//int myrandom(int i) { return rand() % i; }
 
 void Deck::shuffle(Deck &d)
 {
-	srand((unsigned)time(0));
 
+	srand((unsigned)time(0));
+	for (int i = 0; i < 15; i++)
+	{
+		random_shuffle(deck.begin(), deck.end());
+	}
+	d = deck;
+	d.SIZE = SIZE;
+	/*
 	for (int i = 0; i < 15; i++) {
 		//split deck in half -- leftHalf and rightHalf
 		Deck leftHalf, rightHalf;
@@ -117,9 +148,11 @@ void Deck::shuffle(Deck &d)
 			rightHalf.drawCard(d);
 		}
 	}
+	*/
+	return;
 }
 
-void Deck::sort(Deck &d)
+/*void Deck::sort(Deck &d)
 {
 	Card *prev = top;
 	Card *iter = top->next;
@@ -132,33 +165,45 @@ void Deck::sort(Deck &d)
 		iter = prev->next;
 	}
 	
-
-
 }
+*/
+
 void Deck::print()
 {
-	cout << "Cards in pile: " << SIZE << endl;
-	Card *cur = top;
-	while (cur != NULL)
-	{
-		cur->displayCard();
-		cur = cur->getNext();
-	}
-	cout << endl;
+	if (deck.size() == 0) return;
 
+	cout << "Cards in pile: " << deck.size() << endl;
+
+	for (int i = 0; i< deck.size(); ++i)
+		std::cout << ' ' << deck[i];
+	std::cout << '\n';
 
 }//end print
 
-int* Deck::getCardRanks()
+void Deck::printCards()
 {
-	Card *cur = top;
-	int * cardRanks = new int[52];
-	int i = 0;
-	while (cur != NULL)
-	{
-		cardRanks[i] = cur->getVALUE();
-		i++;
-		cur = cur->getNext();
+	if (deck.size() == 0) return;
+	cout << "Cards in pile: " << deck.size() << endl;
+
+	for (int i = 0; i< deck.size(); ++i)
+	{ 
+		cout << getRANK(deck[i]) << " - " << getSUIT(deck[i]) << endl;
 	}
-	return cardRanks;
-}
+	return;
+
+}//end printCards
+
+
+//int* Deck::getCardRanks()
+//{
+//	Card *cur = top;
+//	int * cardRanks = new int[52];
+//	int i = 0;
+//	while (cur != NULL)
+//	{
+//		cardRanks[i] = cur->getVALUE();
+//		i++;
+//		cur = cur->getNext();
+//	}
+//	return cardRanks;
+//}
